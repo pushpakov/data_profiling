@@ -2,7 +2,9 @@ from flask import request, jsonify
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from multiprocessing import Pool
-import asyncio
+from logs.logger import setup_logger
+
+logger = setup_logger()
 
 
 spark = SparkSession.builder.master("local[1]").appName(
@@ -54,6 +56,6 @@ def de_dupe_csv_file():
         # return a JSON object with a success message
         return jsonify({'message': 'CSV file was deduplicated successfully.', "total rows :": total_rows, "deduped_rows": deduped_rows, "dropped_rows :": dropped_rows})
     except Exception as e:
-        print(e)
+        logger.error(str(e)) 
         # return a JSON object with an error message
         return jsonify({'error': 'An error occurred while deduplicating the CSV file.'})
