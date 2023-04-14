@@ -31,6 +31,8 @@ def join_operation():
 
         joined_table = table1.join(table2, on=join_columns, how=how_condition) 
 
+        joined_table.write.format("csv").mode('overwrite').save("/home/allbanero/Downloads/joined_table")
+
 
         # Convert the result to JSON and return it
         return joined_table.toJSON().collect()
