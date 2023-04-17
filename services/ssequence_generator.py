@@ -13,7 +13,7 @@ spark = SparkSession.builder.master("local[1]").appName(
 from pyspark.sql.functions import row_number
 from pyspark.sql.window import Window
 
-def add_sequence_generator_column(df, num_digits):
+def add_sequence_generator_column(df, num_digits, prefix):
     # Generate a sequence number for each row
     window = Window.orderBy('id')
     df_with_sequence = df.withColumn('sequence', row_number().over(window))
@@ -23,7 +23,7 @@ def add_sequence_generator_column(df, num_digits):
     df_with_sequence = df_with_sequence.withColumn(
         'sequence generator', 
         concat(
-            lit('_SG'),
+            lit(prefix),
             lpad(df_with_sequence['sequence'], num_digits, '0')
         )
     )
@@ -37,6 +37,7 @@ def sg_col_file():
 
         # Select the columns we want to join on
         digit_for_seq = json_data['digit']
+        prefix = json_data['prefix'] 
         print(digit_for_seq)
 
         # Get the tables from the JSON data
@@ -44,7 +45,7 @@ def sg_col_file():
             json_data['table_path'])  
         
                 # Add sequence generator column with 5 digits
-        df_with_sequence = add_sequence_generator_column(table1, digit_for_seq)   
+        df_with_sequence = add_sequence_generator_column(table1, digit_for_seq, prefix)   
 
         df_with_sequence.show()   
 
