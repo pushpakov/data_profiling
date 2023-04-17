@@ -2,22 +2,27 @@ from flask import Flask
 from services.de_duplication import *
 from services.join_table import *
 from services.ssequence_generator import *
+from services.filter_table import *
 
 app = Flask(__name__)
 
 
-@app.route('/de_dupe', methods=['GET']) 
+@app.route('/de-dupe', methods=['GET']) 
 def save_csv_file(): 
     return de_dupe_csv_file() 
 
 
-@app.route('/join_table', methods=['GET'])
+@app.route('/join-table', methods=['GET'])
 def join_operation_route():
       return join_operation() 
 
 @app.route('/seq-gen', methods=['GET'])
 def seq_generator_route():
       return sg_col_file() 
+
+@app.route('/filter-csv', methods=['GET'])   
+def filter_csv():
+    return filter_csv_file() 
 
 
 if __name__ == '__main__':
