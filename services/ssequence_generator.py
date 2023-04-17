@@ -17,13 +17,14 @@ def add_sequence_generator_column(df, num_digits):
     # Generate a sequence number for each row
     window = Window.orderBy('id')
     df_with_sequence = df.withColumn('sequence', row_number().over(window))
+    print(df_with_sequence['sequence'])
 
     # Add leading zeros to the sequence number
     df_with_sequence = df_with_sequence.withColumn(
         'sequence generator', 
         concat(
-            lpad(df_with_sequence['sequence'], num_digits, '0'),
-            lit('_SG')
+            lit('_SG'),
+            lpad(df_with_sequence['sequence'], num_digits, '0')
         )
     )
     return df_with_sequence.drop('sequence')
