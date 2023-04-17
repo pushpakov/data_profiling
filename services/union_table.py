@@ -55,8 +55,8 @@ def union_operation():
         resulted_table = spark.sql(query) 
 
         resulted_table.show(truncate=False) 
-        resulted_table.write.format("csv").mode('overwrite').save( 
-            "/home/allbanero/Downloads/unioned_table")
+        resulted_table.coalesce(1).write.format("csv").mode('overwrite').save( 
+            "/home/allbanero/Downloads/unioned_table") 
 
         return jsonify({'message': 'Tables unioned successfully.'}) 
 
